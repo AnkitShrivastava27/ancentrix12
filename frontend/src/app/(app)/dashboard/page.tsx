@@ -26,7 +26,7 @@ function Row({ label, value, color }: { label: string; value: string|number; col
 }
 
 export default function DashboardPage() {
-  const { plan, company } = useAuthStore()
+  const { license, company } = useAuthStore()
   const [ls, setLs] = useState<any>(null)
   const [cs, setCs] = useState<any>(null)
   const [calls, setCalls] = useState<any[]>([])
@@ -43,8 +43,8 @@ export default function DashboardPage() {
     })
   }, [])
 
-  const pct  = plan && plan.minutes_total > 0 ? Math.min(100, Math.round((plan.minutes_used / plan.minutes_total) * 100)) : 0
-  const bar  = pct > 85 ? T.red : pct > 60 ? T.amber : T.green
+  //const pct  = license && license.minutes_total > 0 ? Math.min(100, Math.round((license.minutes_used / license.minutes_total) * 100)) : 0
+  //const bar  = pct > 85 ? T.red : pct > 60 ? T.amber : T.green
 
   return (
     <div>
@@ -61,26 +61,26 @@ export default function DashboardPage() {
         <StatCard label="Converted"     value={ls?.by_status?.closed_won || 0} color={T.amber} loading={loading} sub="closed won" />
       </div>
 
-      {/* License / minutes banner */}
-      {plan && (
-        <div style={{ background:T.surface, border:`1px solid ${plan.status==='active' ? T.border : 'rgba(232,84,84,0.3)'}`, borderRadius:12, padding:'16px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:20 }}>
+      {/* License / minutes banner
+      {license && (
+        <div style={{ background:T.surface, border:`1px solid ${license.status==='active' ? T.border : 'rgba(232,84,84,0.3)'}`, borderRadius:12, padding:'16px 20px', marginBottom:20, display:'flex', alignItems:'center', gap:20 }}>
           <div style={{ flex:1 }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
               <span style={{ fontSize:14, fontWeight:600, color:T.text }}>
-                {plan.status === 'active' ? '✓ License Active' : '⚠ License Inactive'}
+                {license.status === 'active' ? '✓ License Active' : '⚠ License Inactive'}
               </span>
-              <span style={{ fontSize:13, color: bar, fontWeight:700 }}>{plan.minutes_remaining?.toLocaleString()} min remaining</span>
+              <span style={{ fontSize:13, color: bar, fontWeight:700 }}>{license.minutes_remaining?.toLocaleString()} min remaining</span>
             </div>
             <div style={{ height:5, background:'rgba(255,255,255,0.06)', borderRadius:3, overflow:'hidden' }}>
               <div style={{ height:'100%', width:`${pct}%`, background:bar, borderRadius:3, transition:'width 0.5s' }} />
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', marginTop:6 }}>
-              <span style={{ fontSize:12, color:T.text3 }}>{plan.minutes_used?.toLocaleString()} / {plan.minutes_total?.toLocaleString()} used</span>
-              {plan.expires_at && <span style={{ fontSize:12, color:T.text3 }}>Expires {new Date(plan.expires_at).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</span>}
+              <span style={{ fontSize:12, color:T.text3 }}>{license.minutes_used?.toLocaleString()} / {license.minutes_total?.toLocaleString()} used</span>
+              {license.expires_at && <span style={{ fontSize:12, color:T.text3 }}>Expires {new Date(license.expires_at).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</span>}
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Middle row: pipeline + call stats + recent */}
       <div style={{ display:'grid', gridTemplateColumns:'300px 280px 1fr', gap:14, marginBottom:20 }}>
