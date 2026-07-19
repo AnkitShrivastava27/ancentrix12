@@ -35,6 +35,7 @@ export default function SettingsPage() {
   const [keys, setKeys] = useState({
     telnyx_api_key:       '',
     telnyx_connection_id: '',
+    telnyx_phone_number: '',   
     deepgram_api_key:     '',
     groq_api_key:         '',
     webhook_base_url:     '',
