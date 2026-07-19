@@ -364,21 +364,28 @@ export function StatusBadge({ status }: { status: string }) {
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
-export function Modal({ open, onClose, title, children, width = 520 }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode; width?: number }) {
+const MODAL_SIZES: Record<string, number> = { sm: 400, md: 520, lg: 720, xl: 960 }
+
+export function Modal({ open, onClose, title, children, width, footer, size }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode; width?: number; footer?: React.ReactNode; size?: string }) {
   if (!open) return null
+  const resolvedWidth = width ?? MODAL_SIZES[size || 'md'] ?? 520
   return (
     <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding:20 }} onClick={onClose}>
-      <div style={{ background:T.surface, border:`1px solid ${T.border2}`, borderRadius:14, width:'100%', maxWidth:width, maxHeight:'90vh', overflow:'auto' }} onClick={e => e.stopPropagation()}>
+      <div style={{ background:T.surface, border:`1px solid ${T.border2}`, borderRadius:14, width:'100%', maxWidth:resolvedWidth, maxHeight:'90vh', overflow:'auto', display:'flex', flexDirection:'column' }} onClick={e => e.stopPropagation()}>
         <div style={{ padding:'18px 22px', borderBottom:`1px solid ${T.border}`, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <span style={{ fontSize:16, fontWeight:600, color:T.text }}>{title}</span>
           <button onClick={onClose} style={{ background:'none', border:'none', color:T.text3, cursor:'pointer', fontSize:20, lineHeight:1, fontFamily:'inherit', padding:'0 4px' }}>×</button>
         </div>
-        <div style={{ padding:'22px' }}>{children}</div>
+        <div style={{ padding:'22px', overflow:'auto' }}>{children}</div>
+        {footer && (
+          <div style={{ padding:'14px 22px', borderTop:`1px solid ${T.border}`, display:'flex', justifyContent:'flex-end', gap:10 }}>
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   )
 }
-
 // ── EmptyState ────────────────────────────────────────────────────────────────
 export function EmptyState({ icon, title, description, action }: { icon: string; title: string; description?: string; action?: React.ReactNode }) {
   return (
