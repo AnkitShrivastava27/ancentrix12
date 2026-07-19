@@ -22,4 +22,4 @@ RUN mkdir -p /app/uploads /app/chroma_data
 
 EXPOSE 8000
 
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
