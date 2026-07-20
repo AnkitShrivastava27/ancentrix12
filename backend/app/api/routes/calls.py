@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy import select, and_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -104,7 +104,6 @@ async def get_call(
     current_user=Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
 ):
-    from fastapi import HTTPException
     company = await _company(current_user.id, db)
     r = await db.execute(
         select(CallLog).where(CallLog.id == call_id, CallLog.company_id == company.id)

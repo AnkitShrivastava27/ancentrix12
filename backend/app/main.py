@@ -78,10 +78,27 @@ async def lifespan(app: FastAPI):
     yield
 
     # ── Shutdown ──────────────────────────────────────────────────────────────
+    # Each service is closed independently and defensively: if a service
+    # doesn't implement close() (or close() itself raises), we log it and
+    # move on instead of letting the whole shutdown sequence crash. Before
+    # this fix, a missing TelnyxService.close() caused
+    # "Application shutdown failed. Exiting." on every container
+    # restart/redeploy — harmless to live calls, but noisy and it also
+    # skipped llm_service.close() entirely since the exception aborted
+    # the rest of the shutdown block.
     from app.services.telephony.telnyx_service import telnyx_service
     from app.services.llm.llm_service import llm_service
-    await telnyx_service.close()
-    await llm_service.close()
+
+    for name, service in (("telnyx_service", telnyx_service), ("llm_service", llm_service)):
+        close = getattr(service, "close", None)
+        if close is None:
+            logger.warning(f"{name} has no close() method — skipping cleanup")
+            continue
+        try:
+            await close()
+        except Exception as e:
+            logger.warning(f"{name}.close() failed during shutdown (non-fatal): {e}")
+
     logger.info("Shutdown complete")
 
 
