@@ -25,8 +25,8 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: astriccontainer.azurecr.io/
-          username: ${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_2C12A1CCC536493E87AD1610AD4AFC8D }}
-          password: ${{ secrets.AZUREAPPSERVICE_CONTAINERPASSWORD_681CBCFC88D847B49EF2694EC8309B3D }}
+          username: ${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_8D6A39B0339D43FFBD6687A53A445909 }}
+          password: ${{ secrets.AZUREAPPSERVICE_CONTAINERPASSWORD_686DDDBF3C11423EAA67F086D06FA474 }}
 
       - name: Build and push container image to registry
         uses: docker/build-push-action@v3
@@ -34,7 +34,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: astriccontainer.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_2C12A1CCC536493E87AD1610AD4AFC8D }}/astricbackendimage:${{ github.sha }}
+          tags: astriccontainer.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_8D6A39B0339D43FFBD6687A53A445909 }}/astriccontainerimage:${{ github.sha }}
           
 
   deploy:
@@ -50,9 +50,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C13BFC98217E426D9FEB11B46D587467 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D28118E30BCC4AE4A5C285709EAFDFFE }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_39926F594CD84726A351F1E9FA502408 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6E80412AAC1D47258B02F28AD5CB4D23 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_599BF274AE9F4EE19414C370FD70C0BA }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_73910215D117449EA4A5A308310EC476 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -60,5 +60,5 @@ jobs:
         with:
           app-name: 'Astricvoicebackend'
           slot-name: 'Production'
-          images: 'astriccontainer.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_2C12A1CCC536493E87AD1610AD4AFC8D }}/astricbackendimage:${{ github.sha }}'
+          images: 'astriccontainer.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_8D6A39B0339D43FFBD6687A53A445909 }}/astriccontainerimage:${{ github.sha }}'
           
